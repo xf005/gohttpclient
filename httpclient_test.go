@@ -8,8 +8,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -38,6 +39,12 @@ func TestRequest(t *testing.T) {
 
 	if res.StatusCode != 200 {
 		t.Error("Status Code not 200")
+	}
+	var infoTest ResponseInfo
+	if err := res.ToPointer(&infoTest); err == nil {
+		fmt.Println("infoTest.Origin", infoTest.Origin)
+	} else {
+		fmt.Println(err.Error())
 	}
 
 	// post
@@ -105,7 +112,7 @@ func TestRequest(t *testing.T) {
 		t.Error("file not uploaded")
 	}
 
-	imageContent, err := ioutil.ReadFile("README.md")
+	imageContent, err := os.ReadFile("README.md")
 	if err != nil {
 		t.Error(err)
 	}
@@ -124,9 +131,9 @@ func TestResponse(t *testing.T) {
 		t.Error(err)
 	}
 
-	// read with ioutil
+	// read with io
 	defer res.Body.Close()
-	body1, err := ioutil.ReadAll(res.Body)
+	body1, err := io.ReadAll(res.Body)
 
 	if err != nil {
 		t.Error(err)

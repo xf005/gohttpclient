@@ -6,6 +6,7 @@ package httpclient
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"bytes"
@@ -127,7 +128,7 @@ type Response struct {
 	*http.Response
 }
 
-// Read response body into a byte slice.
+// ReadAll Read response body into a byte slice.
 func (this *Response) ReadAll() ([]byte, error) {
 	var reader io.ReadCloser
 	var err error
@@ -143,6 +144,18 @@ func (this *Response) ReadAll() ([]byte, error) {
 
 	defer reader.Close()
 	return io.ReadAll(reader)
+}
+
+// ToPointer Read response body into pointer.
+func (this *Response) ToPointer(rspPointer interface{}) error {
+	bytes, err := this.ReadAll()
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(bytes, rspPointer); err != nil {
+		return errors.New(fmt.Sprintf("json unmarshal result error, rspbuf:%s \n err:%v", string(bytes), err))
+	}
+	return nil
 }
 
 // Read response body into string.

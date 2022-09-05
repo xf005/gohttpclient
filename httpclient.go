@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"io"
-	"io/ioutil"
 	"sync"
 
 	"net"
@@ -143,7 +142,7 @@ func (this *Response) ReadAll() ([]byte, error) {
 	}
 
 	defer reader.Close()
-	return ioutil.ReadAll(reader)
+	return io.ReadAll(reader)
 }
 
 // Read response body into string.

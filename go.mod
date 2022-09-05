@@ -1,3 +1,3 @@
-module github.com/ddliu/go-httpclient
+module github.com/ddliu/gohttpclient
 
-go 1.12
+go 1.19
